@@ -1,0 +1,6 @@
+Sketch to control two servo motors connected to an Arduino Mega 2560 
+with the main controlling processes running on a Raspberry Pi Model B 
+[Arduino IDE 1.x and up].
+
+The values to control the individual servo motor position are send via serial bus
+from the Raspberry Pi.
