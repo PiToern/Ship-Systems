@@ -2,7 +2,7 @@
 
 /***BEGIN L3G4200D***/
 
-int gyroAddress = 105;         //I2C address of the L3G4200D gyroscope - "0x69" in hexadecimal
+int gyroAddress = 0x69;         //I2C address of the L3G4200D gyroscope
 
 #define GYRO_CTRL_REG1 0x20    //L3G4200D output data rate selection, bandwidth selection, set power down mode, enable x,y,z axis
 #define GYRO_CTRL_REG2 0x21    //L3G4200D high-pass-filter (HPF) and operations mode settings
