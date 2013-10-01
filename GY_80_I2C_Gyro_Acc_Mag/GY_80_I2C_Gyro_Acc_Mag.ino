@@ -271,6 +271,9 @@ void printAccValues()                        //print respective values [4 mg/LSB
 
 /***END ADXL345 FUNCTIONS***/
 
+
+/***BEGIN HMC5883L FUNCTIONS***/
+
 int initMag()
 {
   writeRegister(magAddress, MAG_CONFIG_REGISTER_A, 0b00010000);    //set data output rate to 15Hz and normal measurement mode [no forced currents forced across the resistive load] [default register configuration]
@@ -326,10 +329,6 @@ void printMagValues()
   }
   Serial.println("--------");
 }
-
-/***BEGIN HMC5883L FUNCTIONS***/
-
-
 
 /***END HMC5883L FUNCTIONS***/
 
