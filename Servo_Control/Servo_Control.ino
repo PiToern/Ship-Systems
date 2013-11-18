@@ -8,7 +8,7 @@ void setup()
   Sail.attach(7);             //tell the sail servo object which pin on the Arduino board the servos control line is connected to
   Rudder.attach(6);           //tell the rudder servo object which pin on the Arduino board the servos control line is connected to
   
-  Sail.write(90);             //center the servo position - position is given as int for the desired angle
+  Sail.write(90);             //initially center the servo position - position is given as int for the desired angle
   Rudder.write(90);           //(position range should be roughly from 0° to 180°)
   
   Serial.begin(115200);      //start serial bus with given data rate

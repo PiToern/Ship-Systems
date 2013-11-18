@@ -1,0 +1,7 @@
+Python 2.7x code for a Raspberry Pi Model B running Raspbian as OS
+
+Example code using the pySerial library to transmit and receive data via serial port
+from an Arduino Mega 2560 on one of the Raspberry Pi's USB ports in order to test
+the corresponding Arduino setup in this project.
+
+http://pyserial.sourceforge.net/pyserial.html

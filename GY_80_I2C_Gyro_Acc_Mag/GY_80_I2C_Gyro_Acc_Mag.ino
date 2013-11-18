@@ -7,7 +7,7 @@ int gyroAddress = 0x69;        //I2C address of the L3G4200D gyroscope
 #define GYRO_CTRL_REG1 0x20    //L3G4200D output data rate selection, bandwidth selection, set power down mode, enable x,y,z axis
 #define GYRO_CTRL_REG2 0x21    //L3G4200D high-pass-filter (HPF) and operations mode settings
 #define GYRO_CTRL_REG3 0x22    //L3G4200D interrupt, push - pull and FIFO queue settings, boot status availability
-#define GYRO_CTRL_REG4 0x23    //L3G4200D set datat update, selection and scale, self test, SPI mode selection [not set because of I2C use]
+#define GYRO_CTRL_REG4 0x23    //L3G4200D set data update, selection and scale, self test, SPI mode selection [not set because of I2C use]
 #define GYRO_CTRL_REG5 0x24    //L3G4200D rebootmemory content, FIFO and output configuration
 
 int gyroX;                     //hold the respective values
