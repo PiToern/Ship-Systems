@@ -126,8 +126,7 @@ void Gprmc::stringInterpretation(String gpsString)
 			setSpeedOverGround(atof(floatBufferSpeed)); 
 
 			char floatBufferDate[15];
-			dateString.toCharArray(floatBufferDate, sizeof(floatBufferDate)); 	
-			setSpeedOverGround(atof(floatBufferDate)); 
+			dateString.toCharArray(floatBufferDate, sizeof(floatBufferDate)); 	 
 			setDate(atol(floatBufferDate)); 
 		}
 	 }
