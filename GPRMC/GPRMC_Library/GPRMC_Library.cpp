@@ -22,6 +22,7 @@ void Gprmc::stringInterpretation(String gpsString)
 	tenthCommaIndex		= 0; 
 	eleventhCommaIndex  = 0; 
 	twelfthCommaIndex	= 0; 
+	
 
 	 time = 0; 
 	 status = "V"; 
@@ -29,74 +30,106 @@ void Gprmc::stringInterpretation(String gpsString)
 	 longitude = 0; 
 	 speedOverGround = 0; 
 	 date = 0; 
-	 found = false; 
+
+	 gprmcFound = false; 
+	 checksumFound		= false; 
+
+	 checksum = 0;
+	 character = '0'; 
 
 	 if(gpsString.indexOf("GPRMC") != -1)
 	 {
-		 found = true; 
+		 gprmcFound = true; 
 	 }
 	 
-	 if(found)
+	 if(gprmcFound)
 	 {
 		gprmcIndex = gpsString.indexOf("GPRMC"); 
-		firstCommaIndex		= gpsString.indexOf	(',', gprmcIndex		+ 1); 
-		secondCommaIndex	= gpsString.indexOf	(',', firstCommaIndex	+ 1); 
-		thirdCommaIndex		= gpsString.indexOf	(',', secondCommaIndex	+ 1); 
-		fourthCommaIndex	= gpsString.indexOf	(',', thirdCommaIndex	+ 1); 
-		fifthCommaIndex		= gpsString.indexOf	(',', fourthCommaIndex	+ 1); 
-		sixthCommaIndex		= gpsString.indexOf	(',', fifthCommaIndex	+ 1); 
-		seventhCommaIndex	= gpsString.indexOf	(',', sixthCommaIndex	+ 1); 
-		eighthCommaIndex	= gpsString.indexOf	(',', seventhCommaIndex + 1); 
-		ninthCommaIndex		= gpsString.indexOf	(',', eighthCommaIndex	+ 1); 
-		tenthCommaIndex		= gpsString.indexOf	(',', ninthCommaIndex   + 1); 
-		eleventhCommaIndex	= gpsString.indexOf	(',', tenthCommaIndex	+ 1); 
+		firstCommaIndex		= gpsString.indexOf	(',', gprmcIndex		 + 1); 
+		secondCommaIndex	= gpsString.indexOf	(',', firstCommaIndex	 + 1); 
+		thirdCommaIndex		= gpsString.indexOf	(',', secondCommaIndex	 + 1); 
+		fourthCommaIndex	= gpsString.indexOf	(',', thirdCommaIndex	 + 1); 
+		fifthCommaIndex		= gpsString.indexOf	(',', fourthCommaIndex	 + 1); 
+		sixthCommaIndex		= gpsString.indexOf	(',', fifthCommaIndex	 + 1); 
+		seventhCommaIndex	= gpsString.indexOf	(',', sixthCommaIndex	 + 1); 
+		eighthCommaIndex	= gpsString.indexOf	(',', seventhCommaIndex  + 1); 
+		ninthCommaIndex		= gpsString.indexOf	(',', eighthCommaIndex	 + 1); 
+		tenthCommaIndex		= gpsString.indexOf	(',', ninthCommaIndex    + 1); 
+		eleventhCommaIndex	= gpsString.indexOf	(',', tenthCommaIndex	 + 1); 
+		twelfthCommaIndex	= gpsString.indexOf (',', eleventhCommaIndex + 1); 
+
+
 
 		/*
 		 * substring()
 		 * der Startindex ist inklusive, der Endindex ist exkluiv!
 		 */
 
-		timeString				= gpsString.substring(firstCommaIndex +1,	  secondCommaIndex  ); 
-		statusString 			= gpsString.substring(secondCommaIndex +1,    thirdCommaIndex   ); 
-		latitudeString			= gpsString.substring(thirdCommaIndex +1,	  fourthCommaIndex  ); 
-		// N					= gpsString.substring(fourthCommaIndex +1,    fifthCommaIndex   ); 
-		longitudeString		    = gpsString.substring(fifthCommaIndex +1,	  sixthCommaIndex   ); 
-		// E					= gpsString.substring(sixthCommaIndex +1,	  seventhCommaIndex ); 
-		speedOverGroundString	= gpsString.substring(seventhCommaIndex +1,   eighthCommaIndex  ); 
-		//						= gpsString.substring(eighthCommaIndex +1,	  ninthCommaIndex   ); 
-		dateString				= gpsString.substring(ninthCommaIndex +1,	  tenthCommaIndex   ); 
-		//						= gpsString.substring(tenthCommaIndex +1,     eleventhCommaIndex); 
-		//						= gpsString.substring(eleventhCommaIndex +1,  twelfthCommaIndex ); 
+		if (gpsString.substring(twelfthCommaIndex + 2, twelfthCommaIndex + 3).equals("*"))
+		{
+			gprmcSentence			= gpsString.substring (gprmcIndex,			   twelfthCommaIndex + 5); 
+		}
+
+		timeString					= gpsString.substring (firstCommaIndex + 1,	     secondCommaIndex  ); 
+		statusString 				= gpsString.substring (secondCommaIndex + 1,     thirdCommaIndex   ); 
+		latitudeString				= gpsString.substring (thirdCommaIndex + 1,	     fourthCommaIndex  ); 
+	 // northSouthString			= gpsString.substring (fourthCommaIndex + 1,     fifthCommaIndex   ); 
+		longitudeString				= gpsString.substring (fifthCommaIndex + 1,	     sixthCommaIndex   ); 
+	 // westEastString				= gpsString.substring (sixthCommaIndex + 1,	     seventhCommaIndex ); 
+		speedOverGroundString		= gpsString.substring (seventhCommaIndex + 1,    eighthCommaIndex  ); 
+	 // trackAngleString			= gpsString.substring (eighthCommaIndex + 1,     ninthCommaIndex   ); 
+		dateString					= gpsString.substring (ninthCommaIndex + 1,	     tenthCommaIndex   ); 
+	 // magneticVariationString		= gpsString.substring (tenthCommaIndex + 1,      eleventhCommaIndex); 
+	 // magneticVariationSignString	= gpsString.substring (eleventhCommaIndex + 1,   twelfthCommaIndex ); 
+		
+		if (gpsString.substring(twelfthCommaIndex + 2, twelfthCommaIndex + 3).equals("*"))
+		{
+			checksumString			= gpsString.substring (twelfthCommaIndex + 3, twelfthCommaIndex + 5); 
+			checksumFound			= true; 
+		}
 
 		/*
-		 * Setzen der einzelnen Werte, die ausgelesen werden sollen. 
+		 * Checksumme überprüfen:
+		 * Die Checksumme wird berechnet, indem alle Zeichen zwischen dem $ und dem *
+		 * duch ein (bitweise) exklusiv-oder berechnet werden.
+		 * Angegeben wird die Checksumme durch eine Hexadezimalzahl, die hiner dem * steht. 
 		 */
 
-	
-			/*
-		 * String in Float konvertieren:
-		 * Anleitung unter: http://stackoverflow.com/questions/18200035/how-do-you-convert-a-string-to-a-float-or-int
+		for (int i = 0; i < gprmcSentence.length() - 3; i++)
+		{
+			checksum = checksum ^ byte(gprmcSentence[i]); 
+		}
+
+		/*
+		 * Die Daten werden nur gesetzt, falls die empfangenen Daten
+		 * valide sind und die Checksumme korrekt ist.
 		 */
 
-		char floatBufferTime[15];
-		timeString.toCharArray(floatBufferTime, sizeof(floatBufferTime)); 	
-		setTime(atof(floatBufferTime)); 
+		if(statusString.equals("A") && hexToDec(checksumString) == checksum)
+		{
+			char floatBufferTime[15];
+			timeString.toCharArray(floatBufferTime, sizeof(floatBufferTime)); 	
+			setTime(atof(floatBufferTime)); 
 	
-		setStatus(statusString); 
+			setStatus(statusString); 
 	
-		char floatBufferLat[15];
-		latitudeString.toCharArray(floatBufferLat, sizeof(floatBufferLat)); 	
-		setLatitude(atof(floatBufferLat)); 
+			char floatBufferLat[15];
+			latitudeString.toCharArray(floatBufferLat, sizeof(floatBufferLat)); 	
+			setLatitude(atof(floatBufferLat)); 
 
-		char floatBufferLon[15];
-		longitudeString.toCharArray(floatBufferLon, sizeof(floatBufferLon)); 	
-		setLongitude(atof(floatBufferLon)); 
+			char floatBufferLon[15];
+			longitudeString.toCharArray(floatBufferLon, sizeof(floatBufferLon)); 	
+			setLongitude(atof(floatBufferLon)); 
 
-		char floatBufferSpeed[15];
-		speedOverGroundString.toCharArray(floatBufferSpeed, sizeof(floatBufferSpeed)); 	
-		setLongitude(atof(floatBufferSpeed)); 
+			char floatBufferSpeed[15];
+			speedOverGroundString.toCharArray(floatBufferSpeed, sizeof(floatBufferSpeed)); 	
+			setSpeedOverGround(atof(floatBufferSpeed)); 
 
-		setDate(dateString.toInt()); 
+			char floatBufferDate[15];
+			dateString.toCharArray(floatBufferDate, sizeof(floatBufferDate)); 	
+			setSpeedOverGround(atof(floatBufferDate)); 
+			setDate(atol(floatBufferDate)); 
+		}
 	 }
 
 }
@@ -172,13 +205,13 @@ float Gprmc::getSpeedOverGround()
 	return speedOverGround; 
 }
 
-void Gprmc::setDate(int dat)
+void Gprmc::setDate(unsigned long dat)
 
 {
 	date = dat; 
 }
 
-int Gprmc::getDate()
+unsigned long Gprmc::getDate()
 {
 	return date; 
 }
@@ -186,45 +219,80 @@ int Gprmc::getDate()
 
 void Gprmc::printGpsData()
 {
-  Serial.print("Time: "); 
+  //Serial.print("Time: "); 
   Serial.println(getTime()); 
   
-  Serial.print("Status: "); 
+  //Serial.print("Status: "); 
   Serial.println(getStatus()); 
   
-  Serial.print("Breitengrad: "); 
+  //Serial.print("Breitengrad: "); 
   Serial.println(getLatitude());
   
-  Serial.print("Längengrad: "); 
+  //Serial.print("Längengrad: "); 
   Serial.println(getLongitude());
   
-  Serial.print("Geschwindigkeit: "); 
+  //Serial.print("Geschwindigkeit: "); 
   Serial.println(getSpeedOverGround());
   
-  Serial.print("Datum:"); 
+  //Serial.print("Datum:"); 
   Serial.println(getDate());
 }
 
+int Gprmc::hexToDec(String hex)
+{
+	int multiplier = 0; 
+	int decOne; 
+	int decTwo; 
+	
+	char one  = hex.charAt(0);
+	multiplier = chooseMultiplier(one); 
+	decOne =  multiplier *16; 
 
-/*
+	char two = hex.charAt(1); 
+	multiplier = chooseMultiplier(two); 
+	decTwo = multiplier; 
 
-GPRMC (recommended minimum sentence)
-
-
- $GPRMC,hhmmss.ss,A,llll.ll,a,yyyyy.yy,a,x.x,x.x,ddmmyy,x.x,a*hh
-1    = UTC of position fix
-2    = Data status (V=navigation receiver warning)
-3    = Latitude of fix
-4    = N or S
-5    = Longitude of fix
-6    = E or W
-7    = Speed over ground in knots
-8    = Track made good in degrees True
-9    = UT date
-10   = Magnetic variation degrees (Easterly var. subtracts from true course)
-11   = E or W
-12   = Checksum
+	return decOne + decTwo; 
+}
 
 
-*/
-//
+int Gprmc::chooseMultiplier(char mult)
+{
+	int multiplier = 0; 
+
+	switch(mult)
+	{
+		case '1':	multiplier =  1; 
+					break; 
+		case '2':	multiplier =  2; 
+					break; 
+		case '3':	multiplier =  3; 
+					break; 
+		case '4':	multiplier =  4; 
+					break; 
+		case '5':	multiplier =  5; 
+					break; 
+		case '6':	multiplier =  6; 
+					break; 
+		case '7':	multiplier =  7; 
+					break; 
+		case '8':	multiplier =  8; 
+					break; 
+		case '9':	multiplier =  9; 
+					break; 
+		case 'A':   multiplier = 10; 
+					break;	
+		case 'B':	multiplier = 11;
+					break;	
+		case 'C':   multiplier = 12; 
+					break; 
+		case 'D':	multiplier = 13; 
+					break; 
+		case 'E':	multiplier = 14; 
+					break; 
+		case 'F':	multiplier = 15; 
+					break; 
+	}
+	return multiplier; 
+}
+

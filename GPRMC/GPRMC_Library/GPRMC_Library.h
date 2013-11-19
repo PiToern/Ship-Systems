@@ -34,9 +34,13 @@ class Gprmc
 			
 		float getSpeedOverGround();
 
-		void setDate(int dat); 
+		void setDate(unsigned long dat); 
 
-		int getDate(); 
+		unsigned long getDate(); 
+
+		int hexToDec(String h);
+
+		int chooseMultiplier(char m); 
 
 	private:
 		float time; 
@@ -44,8 +48,12 @@ class Gprmc
 		float latitude; 
 		float longitude; 
 		float speedOverGround; 
-		int date; 
-		bool found; 
+		unsigned long date; 
+		bool gprmcFound; 
+		bool checksumFound; 
+
+		int checksum; 
+		char character; 
 
 		int gprmcIndex; 
 		int firstCommaIndex; 
@@ -60,13 +68,21 @@ class Gprmc
 		int tenthCommaIndex; 
 		int eleventhCommaIndex; 
 		int twelfthCommaIndex; 
+		
 
+		String gprmcSentence; 
 		String timeString; 
 		String statusString;
 		String latitudeString; 
+		String northSouthString; 
 		String longitudeString; 
+		String westEastString;
 		String speedOverGroundString; 
+		String trackAngleString;
 		String dateString; 
+		String magneticVariationString; 
+		String magneticVariationSignString; 
+		String checksumString; 
 
 }; 
 
