@@ -13,7 +13,7 @@ void setup()
   
   Serial.begin(115200);      //start serial bus with given data rate
   Serial.println("Enter servo position in degrees between 0 and 180.");
-  Serial.println("s or r followed by the desired angle - example: s90");
+  Serial.println("s or r followed by the desired angle - example: s45");
 }
 
 void loop()

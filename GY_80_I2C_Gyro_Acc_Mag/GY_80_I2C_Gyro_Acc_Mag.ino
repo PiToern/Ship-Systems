@@ -31,7 +31,7 @@ int accAddress = 0xA7 >> 1;        //I2C address of the ADXL345 accelerometer
 #define ACC_POWER_CTL_REG 0x2D     //power control register
 #define ACC_DATA_FORMAT_REG 0x31   //data format register
 
-int accX;                    //hold the respective values
+int accX;                          //hold the respective values
 int accY;
 int accZ;
 
@@ -46,21 +46,21 @@ const int accDelay = 500;            //delay between consecutive readings - subj
 
 /***BEGIN HMC5883L***/
 
-int magAddress = 0x1E;        //I2C address of the HMC5883L magnetometer
+int magAddress = 0x1E;                //I2C address of the HMC5883L magnetometer
 
-#define MAG_CONFIG_REGISTER_A 0x00    //configuration register A [set data putput rate and measurement configuration]
+#define MAG_CONFIG_REGISTER_A 0x00    //configuration register A [set data output rate and measurement configuration]
 #define MAG_CONFIG_REGISTER_B 0x01    //configuration register B [set the device gain]
-#define MAG_MODE_REGISTER 0x02      //mode register [set operation mode]
+#define MAG_MODE_REGISTER 0x02        //mode register [set operation mode]
 
-int magX;                    //hold the respective values
+int magX;                    		  //hold the respective values
 int magY;
 int magZ;
 
-const int magX_Thresh = 0;         //noise threshold for the respective readings - subject to change
+const int magX_Thresh = 0;            //noise threshold for the respective readings - subject to change
 const int magY_Thresh = 0;
 const int magZ_Thresh = 0;
 
-const int magDelay = 500;            //delay between consecutive readings - subject to change
+const int magDelay = 500;             //delay between consecutive readings - subject to change
 
 /***END HMC5883L***/
 
@@ -68,7 +68,7 @@ const int magDelay = 500;            //delay between consecutive readings - subj
 void setup()
 {
   Wire.begin();                              //start I2C bus [normal mode 100 kHz]
-  Serial.begin(115200);                     //start serial bus with given data rate
+  Serial.begin(115200);                      //start serial bus with given data rate
  
 /***BEGIN SETUP L3G4200D***/
   
@@ -150,7 +150,7 @@ int initGyro(int scale)       //by Jim Lindblom [Sparkfun]
 
   writeRegister(gyroAddress, GYRO_CTRL_REG3, 0b00001000);     //set CTRL_REG3 to generate data ready interrupt on INT2 - no interrupts used on INT1
 
-  if(scale == 250){                                            //set full-scale range according initGyro value [250, 500, 2000 deg/sec]
+  if(scale == 250){                                           //set full-scale range according initGyro value [250, 500, 2000 deg/sec]
     writeRegister(gyroAddress, GYRO_CTRL_REG4, 0b00000000);
   }else if(scale == 500){
     writeRegister(gyroAddress, GYRO_CTRL_REG4, 0b00010000);
@@ -168,9 +168,9 @@ void getGyroValues()
   byte xGyroValLSB = readRegister(gyroAddress, 0x28);    //read register x-axis low byte
   gyroX = ((xGyroValMSB << 8) | xGyroValLSB);            //get x-axis value as int by combining high and low byte 
 
-  byte yGyroValMSB = readRegister(gyroAddress, 0x2B);   //read register y-axis high byte
-  byte yGyroValLSB = readRegister(gyroAddress, 0x2A);   //read register y-axis low byte
-  gyroY = ((yGyroValMSB << 8) | yGyroValLSB);           //get y-axis value as int by combining high and low byte
+  byte yGyroValMSB = readRegister(gyroAddress, 0x2B);    //read register y-axis high byte
+  byte yGyroValLSB = readRegister(gyroAddress, 0x2A);    //read register y-axis low byte
+  gyroY = ((yGyroValMSB << 8) | yGyroValLSB);            //get y-axis value as int by combining high and low byte
 
   byte zGyroValMSB = readRegister(gyroAddress, 0x2D);     //read register z-axis high byte
   byte zGyroValLSB = readRegister(gyroAddress, 0x2C);     //read register z-axis low byte
