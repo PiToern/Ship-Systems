@@ -99,43 +99,9 @@ void Rotary::updateEncoder()
 
 int Rotary::updateEncoderPosition(int encoderPos)
 {
-	 switch(encoderPos)
+	if (encoderPos <= -1)
     {
-      case -1: 
-                encoderPosition = 11;
-                break;
-      case -2: 
-                encoderPosition = 10;
-                break;
-      case -3: 
-                encoderPosition = 9;
-                break;
-      case -4: 
-                encoderPosition = 8;
-                break;
-      case -5: 
-                encoderPosition = 7;
-                break;
-      case -6: 
-                encoderPosition = 6;
-                break;
-      case -7: 
-                encoderPosition = 5;
-                break;
-      case -8: 
-                encoderPosition = 4;
-                break;
-      case -9: 
-                encoderPosition = 3;
-                break;
-      case -10: 
-                encoderPosition = 2;
-                break;
-      case -11: 
-                encoderPosition = 1;
-                break;
-       default: 
-                break;
+		encoderPosition = 12 + encoderPos;
     }
 
 	 return encoderPosition; 
